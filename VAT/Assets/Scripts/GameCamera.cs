@@ -3,18 +3,19 @@ using System.Collections;
 
 public class GameCamera : MonoBehaviour {
 
-	private Transform target;
 	private Vector3 cameraTarget;
+
+	private Transform target;
 
 	// Use this for initialization
 	void Start () {
 		target = GameObject.FindGameObjectWithTag("Player").transform;
-
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		cameraTarget = new Vector3(target.position.x, transform.position.y, target.position.z);
-		transform.position = Vector3.Lerp (transform.position, cameraTarget, Time.deltaTime*8);
+		//Camera will always Lerp to (0, 8, -23) away from player
+		cameraTarget = new Vector3(target.position.x, target.position.y + 8, target.position.z - 23);
+		transform.position = Vector3.Lerp (transform.position, cameraTarget, Time.deltaTime * 8);
 	}
 }
