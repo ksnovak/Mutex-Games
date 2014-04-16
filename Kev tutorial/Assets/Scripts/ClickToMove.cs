@@ -11,6 +11,8 @@ public class ClickToMove : MonoBehaviour {
 	public AnimationClip run;
 	public AnimationClip idle;
 
+	public static bool attack;
+
 	// Use this for initialization
 	void Start () {
 		position = transform.position;
@@ -18,13 +20,16 @@ public class ClickToMove : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if(Input.GetMouseButton (0))
+		if (!attack)
 		{
-			//Find where the click actually is on the ground
-			locatePosition();
+			if(Input.GetMouseButton (0))
+			{
+				//Find where the click actually is on the ground
+				locatePosition();
+			}
+			//Move the player to the position
+			moveToPosition();
 		}
-		//Move the player to the position
-		moveToPosition();
 	}
 
 	void locatePosition() 
@@ -34,7 +39,10 @@ public class ClickToMove : MonoBehaviour {
 
 		if (Physics.Raycast(ray, out hit, 1000))
 		{
-			position = new Vector3(hit.point.x, hit.point.y, hit.point.z);
+			if (hit.collider.tag != "Player" && hit.collider.tag != "Enemy")
+			{
+				position = new Vector3(hit.point.x, hit.point.y, hit.point.z);
+			}
 			// Debug.Log (position);
 		}
 	

@@ -46,9 +46,9 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Combat.cs" />
-     <Compile Include="Assets\Mob.cs" />
      <Compile Include="Assets\Scripts\ClickToMove.cs" />
+     <Compile Include="Assets\Scripts\Combat.cs" />
+     <Compile Include="Assets\Scripts\Mob.cs" />
      <None Include="Assets\SkeletonData\animations.txt" />
   </ItemGroup>
   <ItemGroup>
