@@ -7,10 +7,7 @@ public class Combat : MonoBehaviour {
 	public AnimationClip attack;
 	public AnimationClip dieClip;
 
-<<<<<<< HEAD
 	public int maxHealth;
-=======
->>>>>>> fd39a36777d512b4454cecd32b316c2b03e34627
 	public int health;
 	public int damage;
 	private double impactLength;
@@ -115,11 +112,7 @@ public class Combat : MonoBehaviour {
 		}
 		else if (isDead() && endedDeath)
 		{
-<<<<<<< HEAD
 			//revive();
-=======
-			revive();
->>>>>>> fd39a36777d512b4454cecd32b316c2b03e34627
 		}
 	}
 
