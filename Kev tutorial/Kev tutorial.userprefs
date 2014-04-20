@@ -1,4 +1,14 @@
 ﻿<Properties>
+<<<<<<< HEAD
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\EnemyHealth.cs">
+    <Files>
+      <File FileName="Assets\Scripts\EnemyHealth.cs" Line="62" Column="39" />
+      <File FileName="Assets\Scripts\ClickToMove.cs" Line="47" Column="28" />
+      <File FileName="Assets\Scripts\Combat.cs" Line="33" Column="20" />
+      <File FileName="Assets\Scripts\Mob.cs" Line="117" Column="38" />
+      <File FileName="Assets\Scripts\LevelSystem.cs" Line="33" Column="22" />
+=======
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Combat.cs">
     <Files>
@@ -6,6 +16,7 @@
       <File FileName="Assets\Scripts\ClickToMove.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\Combat.cs" Line="60" Column="33" />
       <File FileName="Assets\Scripts\Mob.cs" Line="84" Column="24" />
+>>>>>>> fd39a36777d512b4454cecd32b316c2b03e34627
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
