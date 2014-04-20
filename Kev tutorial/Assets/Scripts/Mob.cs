@@ -8,22 +8,31 @@ public class Mob : MonoBehaviour {
 	public bool isInRange;
 
 	public Transform player;
+	private Combat opponent;
 
 	public CharacterController controller;
+	public AnimationClip attackClip;
 	public AnimationClip run;
 	public AnimationClip idle;
 	public AnimationClip die;
 
-	private int health;
+	public int maxHealth;
+	public int health;
+	public int damage;
+	public float impactTime = 0.46f;
+	private bool impacted;
+
 
 	// Use this for initialization
 	void Start () {
-		health = 100;
+		health = maxHealth;
+		opponent = player.GetComponent<Combat>();
 	}
 	
 	// Update is called once per frame
 	void Update () {
 //		Debug.Log (inRange());
+
 
 		if (!isDead())
 		{
@@ -34,12 +43,26 @@ public class Mob : MonoBehaviour {
 
 			else
 			{
-				animation.CrossFade(idle.name);
+				attack ();
+				if (animation[attackClip.name].time > 0.9*animation[attackClip.name].length)
+				{
+					impacted = false;
+				}
 			}
 		}
 		else
 		{
 			dieMethod ();
+		}
+	}
+
+	void attack() 
+	{
+		animation.Play (attackClip.name);
+		if (animation[attackClip.name].time > animation[attackClip.name].length * impactTime && !impacted && animation[attackClip.name].time < 0.9*animation[attackClip.name].length)
+		{
+			impacted = true;
+			opponent.getHit(damage);
 		}
 	}
 
