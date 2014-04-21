@@ -27,7 +27,7 @@ public class Mob : MonoBehaviour {
 	public float impactTime = 0.46f;	//At what part of the attack animation does a "hit" actually occur
 	private bool impacted;	//If the hit has occurred yet or not.
 
-
+	public int stunTime;
 
 	// Use this for initialization
 	void Start () {
@@ -36,27 +36,34 @@ public class Mob : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
-//		Debug.Log (inRange());
-
-
+	void Update () 
+	{
 		if (!isDead())
 		{
-			if (!inRange())
+			if (stunTime <= 0)
 			{
-				chase();
-			}
 
-			else
-			{
-				attack ();
-				if (animation[attackClip.name].time > 0.9*animation[attackClip.name].length)
+				if (!inRange())
 				{
-					impacted = false;
+					chase();
+				}
+				else
+				{
+					animation.Play(attackClip.name);
+					attack ();
+
+					if (animation[attackClip.name].time > 0.9*animation[attackClip.name].length)
+					{
+						impacted = false;
+					}
 				}
 			}
+			else 
+			{ 
+			
+			}
 		}
-		else
+		else 
 		{
 			dieMethod ();
 		}
@@ -64,7 +71,6 @@ public class Mob : MonoBehaviour {
 
 	void attack() 
 	{
-		animation.Play (attackClip.name);
 		if (animation[attackClip.name].time > animation[attackClip.name].length * impactTime && !impacted && animation[attackClip.name].time < 0.9*animation[attackClip.name].length)
 		{
 			impacted = true;
@@ -78,9 +84,9 @@ public class Mob : MonoBehaviour {
 		return (Vector3.Distance(transform.position, player.position) < range);
 	}
 
-	public void getHit(int damage)
+	public void getHit(double damage)
 	{
-		health = health - damage;
+		health -= (int)damage;
 
 		if (health < 0)
 		{
@@ -88,6 +94,24 @@ public class Mob : MonoBehaviour {
 		}
 
 		//Debug.Log (health);
+	}
+
+	public void getStun(int seconds)
+	{
+		CancelInvoke("stunCountDown");
+		Debug.Log ("getStun!");
+		stunTime = seconds;
+		InvokeRepeating ("stunCountDown", 0f, 1f);
+	}
+
+	void stunCountDown()
+	{
+		Debug.Log("countdown!");
+		stunTime --;
+		if (stunTime <= 0)
+		{
+			CancelInvoke("stunCountDown");
+		}
 	}
 
 	void chase()

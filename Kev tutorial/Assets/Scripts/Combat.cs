@@ -14,6 +14,7 @@ public class Combat : MonoBehaviour {
 
 	public double impactTime;
 	public bool impacted;
+	public bool inAction;
 	public float combatEscapeTime;
 	public float countDown;
 
@@ -21,6 +22,8 @@ public class Combat : MonoBehaviour {
 
 	bool startedDeath;
 	bool endedDeath;
+
+	public bool specialAttack;
 
 	// Use this for initialization
 	void Start () {
@@ -32,40 +35,104 @@ public class Combat : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-//		Debug.Log (opponent);
-		if (Input.GetKey (KeyCode.Space) && inRange() && !isDead())
+		if (!specialAttack && Input.GetKeyDown (KeyCode.Space))
 		{
-			animation.Play(attack.name);
-			ClickToMove.attack = true;
+			inAction = true;
+		}
 
-			if (opponent != null)
+		if (inAction)
+		{
+			if (attackFunctions(0, 1, KeyCode.Space, null, 0, true))
 			{
-				transform.LookAt (opponent.transform);
+			}
+			else
+			{
+				inAction = false;
 			}
 		}
 
+		die ();
+	}
+
+	public bool attackFunctions(int stunSeconds, double scaledDamage, KeyCode key, GameObject particleEffect, int projectile, bool opponentBased)
+	{
+		if (opponentBased)
+		{
+			if (Input.GetKey (key) && inRange())
+			{
+				animation.Play(attack.name);
+				ClickToMove.attack = true;
+				
+				if (opponent != null)
+				{
+					transform.LookAt (opponent.transform.position);
+				}
+			}
+		}
+		else
+		{
+			if (Input.GetKey (key))
+			{
+				animation.Play(attack.name);
+				ClickToMove.attack = true;
+				transform.LookAt (ClickToMove.cursorPosition);
+			}
+		}
 		if (animation[attack.name].time > 0.9 * animation[attack.name].length)
 		{
 			ClickToMove.attack = false;
 			impacted = false;
+			if (specialAttack)
+			{
+				specialAttack = false;
+			}
+			return false;
 		}
-		impact ();
-		die ();
+		impact (stunSeconds, scaledDamage, key, particleEffect, projectile, opponentBased);
+		return true;
 	}
 
-	void impact()
+	public void resetAttackFunction() 
 	{
-		if (opponent != null && animation.IsPlaying(attack.name)  && !impacted)
+		ClickToMove.attack = false;
+		impacted = false;
+		animation.Stop(attack.name);
+	}
+
+	void stunMob()
+	{
+
+	}
+
+	void impact(int stunSeconds, double scaledDamage, KeyCode key, GameObject particleEffect, int projectile, bool opponentBased)
+	{
+		if ((opponentBased || opponent != null) && animation.IsPlaying(attack.name)  && !impacted)
 		{
 			if (animation[attack.name].time > impactLength && (animation[attack.name].time < 0.9 * animation[attack.name].length))
 			{
-				countDown = combatEscapeTime;
+				countDown = combatEscapeTime + 2;
 				CancelInvoke("checkCombat");
 				InvokeRepeating ("checkCombat", 0, 1);
-				Profiler.BeginSample ("Test");
-				opponent.GetComponent<Mob>().getHit(damage);
+				if (opponentBased)
+				{
+					opponent.GetComponent<Mob>().getHit(damage*scaledDamage);
+					opponent.GetComponent<Mob>().getStun(stunSeconds);
+				}
+
+				Quaternion rot = transform.rotation;
+				rot.x = 0;
+				rot.z = 0;
+
+				if (projectile > 0)
+				{
+					Debug.Log ("hi " + projectile);
+					Instantiate(Resources.Load("Projectile"), new Vector3(transform.position.x, transform.position.y + 1.5f, transform.position.z), rot);
+				}
+
+				if (particleEffect != null)
+					Instantiate (particleEffect, new Vector3(opponent.transform.position.x, opponent.transform.position.y + 1.5f, opponent.transform.position.z), Quaternion.identity);
+
 				impacted = true;
-				Profiler.EndSample ();
 			}
 		}
 	}
@@ -75,7 +142,7 @@ public class Combat : MonoBehaviour {
 		if (countDown == 0)
 		{
 			CancelInvoke ("checkCombat");
-			opponent = null;
+			//opponent = null;
 		}
 	}
 
